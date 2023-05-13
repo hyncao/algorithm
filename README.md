@@ -11,3 +11,7 @@
 - leetcode.cn 内含力扣中文站的算法题目
 
 - lib 工具库
+
+## 问题
+
+调试代码时会报找不到文件路径的错误，这是 Mac 和 Windows 系统差异导致的，修改配置请查看 .vscode/launch.json

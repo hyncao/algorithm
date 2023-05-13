@@ -9,7 +9,10 @@
       "request": "launch",
       "name": "启动程序",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\${file}"
+      // 不同操作系统这里的配置需要修改
+      // "programWindows": "${workspaceFolder}\\${file}",
+      // "programMac": "${file}",
+      "program": "${file}",
       // "console": "integratedTerminal"
     }
   ]
