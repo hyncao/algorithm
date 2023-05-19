@@ -24,7 +24,7 @@
 // 55.1 MB, 在所有 JavaScript 提交中击败了 47.13% 的用户
 const distributeCandies = candyType => {
   const len = candyType.length / 2;
-  const fLen = [...new Set(candyType)].length;
+  const fLen = new Set(candyType).size;
   return Math.min(len, fLen);
 };
 
