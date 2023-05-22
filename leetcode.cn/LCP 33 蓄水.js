@@ -22,30 +22,37 @@
 // 输出：3
 
 // 思考：
-// 一定是先升级，再蓄水
-// 找出最贴近目标的 i ，完成 i 需要 X = Math.ceil(vat[i] / bucket[i])
-// 找出最离谱的 i, 需要 Y = Math.ceil(vat[i] / X) - bucket[i]
-// return X + Y
+// bucket = [1,3], vat = [6,8]
+// dp[i] 为前 [0-i] 个水缸所需要的操作次数
+// bucket = [1,3,1], vat = [6,8,5]
+// dp[0]:
+// 方案1：升级 1 次，蓄水 3 次
+// 方案2：升级 2 次，蓄水 2 次
+// dp[1]:
+// 第二个水缸无法共享第一个水缸的升级操作，但是可以共享蓄水
+// 蓄水 3 次才可以满足第二个水缸，所以只能用 方案1
+// dp[2]:
+// 方案1 不能满足第三个水缸
+// 方案3：升级 1 次，蓄水 3 次
+// 方案4：升级 2 次，蓄水 2 次
+// 方案5：升级 4 次，蓄水 0 次
+// 结合前两个水缸，我们在 方案1 的基础上，为第三个水缸多升级 1 次即可
+// 结论：用少升级的方案，因为蓄水操作是所有水缸一起蓄水
+// 每个水缸的应用方案中，选择多蓄水，少升级的方案
 const storeWater = (bucket, vat) => {
   const len = bucket.length;
-  let closest = 0;
-  let farest = 0;
-  let closestFactor = Infinity;
-  let farestFactor = 1;
+  let storeCount = 0;
   for (let i = 0; i < len; i++) {
-    const factor = Math.ceil(vat[i] / bucket[i]);
-    if (factor < closestFactor) {
-      closestFactor = factor;
-      closest = i;
-    }
-    if (factor > farestFactor) {
-      farestFactor = factor;
-      farest = i;
+    let currentBucket = bucket[i];
+    const currentVat = vat[i];
+    if (currentBucket < currentVat && currentBucket * storeCount < currentVat) {
+      if (currentBucket === 0) currentBucket++;
+      const currentFactor = Math.ceil(currentVat / currentBucket)
+      if (currentFactor)
     }
   }
-  return closestFactor + Math.ceil(vat[farest] / closestFactor) - bucket[farest];
 };
 
-const bucket = [9,0,1],
-  vat = [0,2,2];
+const bucket = [9, 0, 1],
+  vat = [0, 2, 2];
 console.log(storeWater(bucket, vat));
