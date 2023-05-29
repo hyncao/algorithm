@@ -25,7 +25,7 @@
 // 64 ms, 在所有 JavaScript 提交中击败了 66.06% 的用户
 // 内存消耗：
 // 43.9 MB, 在所有 JavaScript 提交中击败了 6.67% 的用户
-const sampleStats = count => {
+const sampleStats1 = count => {
   let minimum = 256;
   let maximum = 0;
   let sum = 0;
@@ -64,6 +64,58 @@ const sampleStats = count => {
   return [minimum, maximum, mean, median, mode];
 };
 
+// 遍历两次，第一次拿到总长度，就可以确定中位数的下标了
+// O(2n) O(1)
+// 执行用时：
+// 64 ms, 在所有 JavaScript 提交中击败了 66.06% 的用户
+// 内存消耗：
+// 41.3 MB, 在所有 JavaScript 提交中击败了 83.94% 的用户
+const sampleStats2 = count => {
+  let minimum = 256;
+  let maximum = 0;
+  let sum = 0;
+  let mode = 0;
+  let maxRepeat = 0;
+  let countNum = 0;
+  for (let num = 0; num < 256; num++) {
+    const repeat = count[num];
+    if (repeat) {
+      if (minimum > num) minimum = num;
+      maximum = num;
+      sum += num * repeat;
+      if (repeat > maxRepeat) {
+        maxRepeat = repeat;
+        mode = num;
+      }
+      countNum += repeat;
+    }
+  }
+  let indexSum = 0;
+  let medianSum = 0;
+  const medianIndex = countNum >> 1;
+  for (let num = 0; num < 256; num++) {
+    const repeat = count[num];
+    if (countNum & 1) {
+      if (medianIndex >= indexSum && medianIndex < indexSum + repeat) {
+        medianSum = num;
+        break;
+      }
+    } else {
+      if (medianIndex - 1 >= indexSum && medianIndex - 1 < indexSum + repeat) {
+        medianSum += num;
+      }
+      if (medianIndex >= indexSum && medianIndex < indexSum + repeat) {
+        medianSum += num;
+        break;
+      }
+    }
+    indexSum += repeat;
+  }
+  const mean = sum / countNum;
+  const median = medianSum / (2 - (countNum & 1));
+  return [minimum, maximum, mean, median, mode];
+};
+
 const count = [
   0, 1, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -74,4 +126,4 @@ const count = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-console.log(sampleStats(count));
+console.log(sampleStats2(count));
