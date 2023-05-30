@@ -39,20 +39,34 @@
 // 结合前两个水缸，我们在 方案1 的基础上，为第三个水缸多升级 1 次即可
 // 结论：用少升级的方案，因为蓄水操作是所有水缸一起蓄水
 // 每个水缸的应用方案中，选择多蓄水，少升级的方案
+
+// ！！！操，想多了，老实枚举吧！！！
+
+// O(len * maxVat) O(1)
+// 执行用时：
+// 68 ms, 在所有 JavaScript 提交中击败了58.89%的用户
+// 内存消耗：
+// 41 MB, 在所有 JavaScript 提交中击败了 80.55% 的用户
 const storeWater = (bucket, vat) => {
-  const len = bucket.length;
-  let storeCount = 0;
-  for (let i = 0; i < len; i++) {
-    let currentBucket = bucket[i];
-    const currentVat = vat[i];
-    if (currentBucket < currentVat && currentBucket * storeCount < currentVat) {
-      if (currentBucket === 0) currentBucket++;
-      const currentFactor = Math.ceil(currentVat / currentBucket)
-      if (currentFactor)
-    }
+  let maxVat = 0;
+  for (const i of vat) {
+    if (i > maxVat) maxVat = i;
   }
+  if (maxVat === 0) return 0;
+  let len = bucket.length;
+  let res = Infinity;
+  for (let fill = 1; fill <= maxVat && fill < res; fill++) {
+    let update = 0;
+    for (let i = 0; i < len; i++) {
+      if (bucket[i] < vat[i]) {
+        update += Math.max(0, Math.ceil(vat[i] / fill) - bucket[i]);
+      }
+    }
+    const total = update + fill;
+    res = Math.min(res, total);
+  }
+  return res;
 };
 
-const bucket = [9, 0, 1],
-  vat = [0, 2, 2];
+const bucket = [1,3], vat = [6,6];
 console.log(storeWater(bucket, vat));
