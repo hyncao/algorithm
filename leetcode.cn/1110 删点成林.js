@@ -16,11 +16,33 @@
 
 // 递归
 const delNodes = (root, to_delete) => {
-  1;
+  const res = [root];
+  const fn = (currentTree, deleteVal, tree = {}, list = []) => {
+    if (currentTree.val === deleteVal) {
+      if (currentTree.left) list.push(currentTree.left);
+      if (currentTree.right) list.push(currentTree.right);
+      currentTree = null;
+      list.push(tree);
+      return list;
+    } else {
+      tree.val = currentTree.val;
+      tree.left = currentTree.left ? fn(currentTree.left, deleteVal, tree, list) : null;
+      tree.right = currentTree.right ? fn(currentTree.right, deleteVal, tree, list) : null;
+      return tree;
+    }
+  };
+  const a = fn(root, to_delete[0]);
+  console.log(a);
+  // while (to_delete.length > 0) {
+  //   for (let i = 0; i < res.length; i++) {
+
+  //   }
+  // }
 };
 
-const root = [1, 2, 3, 4, 5, 6, 7];
+const root = [1, 2, 3, 4, 5, 6, 7],
+  to_delete = [3, 5];
 
 const { array2TreeNode } = require('../lib/utils');
 
-console.log(delNodes(array2TreeNode(root)));
+console.log(delNodes(array2TreeNode(root), to_delete));
