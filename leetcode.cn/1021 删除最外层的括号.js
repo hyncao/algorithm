@@ -24,17 +24,86 @@
 // 输入：s = "()()"
 // 输出：""
 
-const removeOuterParentheses = (s) => {
+// 极其丑陋的代码，我自己都看不太懂
+// O(n) O(n)
+// 执行用时：
+// 72 ms, 在所有 JavaScript 提交中击败了 36.59% 的用户
+// 内存消耗：
+// 41.78 MB, 在所有 JavaScript 提交中击败了 51.22% 的用户
+const removeOuterParentheses1 = s => {
   let res = '';
   let n = s.length;
-  let flag = false;  
-  for(let i = 0; i < n; i++) {
+  let start = true;
+  let left = 0;
+  for (let i = 0; i < n; i++) {
     const current = s[i];
-    if (current === '(' && !flag) flag = true;
-    if (current === ')' )
+    if (start) {
+      if (current === '(') start = false;
+      continue;
+    } else {
+      if (current === '(') left++;
+      else left--;
+      if (left < 0) {
+        left = 0;
+        start = true;
+        continue;
+      }
+      res += current;
+      if (left === 0 && s[i + 1] === ')') {
+        start = true;
+        i++;
+      }
+    }
   }
+  return res;
 };
 
-const s = "(()())(())(()(()))";
+// 梳理了一下方法1，通过 addFlag 判断是否添加 current
+// O(n) O(n)
+// 执行用时：
+// 56 ms, 在所有 JavaScript 提交中击败了 97.56% 的用户
+// 内存消耗：
+// 41.81 MB, 在所有 JavaScript 提交中击败了 51.22% 的用户
+const removeOuterParentheses2 = s => {
+  let res = '';
+  let n = s.length;
+  let left = 0;
+  let addFlag = false;
+  for (let i = 0; i < n; i++) {
+    const current = s[i];
+    if (current === '(') left++;
+    else left--;
+    if (left === 0) {
+      addFlag = false;
+      continue;
+    }
+    if (left > 0 && i > 0 && addFlag) {
+      res += current;
+    }
+    if (!addFlag) addFlag = true;
+  }
+  return res;
+};
 
-console.log(removeOuterParentheses(s));
+// 修改 if 的顺序，先执行 left++，在加到 res中
+// O(n) O(n)
+// 执行用时：
+// 60 ms, 在所有 JavaScript 提交中击败了 91.46% 的用户
+// 内存消耗：
+// 41.71 MB, 在所有 JavaScript 提交中击败了 59.76% 的用户
+const removeOuterParentheses3 = s => {
+  let res = '';
+  let n = s.length;
+  let left = 0;
+  for (let i = 0; i < n; i++) {
+    const current = s[i];
+    if (current === ')') left--;
+    if (left > 0) res += current;
+    if (current === '(') left++;
+  }
+  return res;
+};
+
+const s = '(()())(())';
+
+console.log(removeOuterParentheses3(s));
